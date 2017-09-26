@@ -22,10 +22,11 @@ type RingSlice interface {
 }
 
 type genericRingSlice struct {
-	data []interface{}
-	head int
-	tail int
-	len  int
+	data        []interface{}
+	head        int
+	tail        int
+	len         int
+	initialized bool
 }
 
 //New creates a new RingSlice of size n
@@ -33,23 +34,25 @@ func New(n int) (RingSlice, error) {
 	if n <= 0 {
 		return nil, ErrNegative
 	}
-	return &genericRingSlice{make([]interface{}, n), 0, 0, n}, nil
+	return &genericRingSlice{make([]interface{}, n), 0, 0, n, false}, nil
 }
 
 func (g *genericRingSlice) Append(val interface{}) {
 	if g.tail+1 >= g.len {
 		g.tail = 0
-	} else if g.tail != g.head {
+	} else if g.initialized {
 		g.tail++
 	}
-	g.data[g.tail] = val
-	if g.tail == g.head {
+	if g.tail == g.head && g.initialized {
 		if g.head+1 >= g.len {
 			g.head = 0
 		} else {
 			g.head++
 		}
+	} else if !g.initialized {
+		g.initialized = true
 	}
+	g.data[g.tail] = val
 }
 func (g *genericRingSlice) Put(i int, val interface{}) error {
 	if i >= g.len {

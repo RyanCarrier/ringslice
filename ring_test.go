@@ -49,7 +49,7 @@ func TestAppend(t *testing.T) {
 		}
 		r.Append(6)
 		if r.data[0].(int) != 4 || r.data[1].(int) != 6 {
-			t.Error(r.data)
+			t.Error(r)
 		}
 	})
 	t.Run("Append past head", func(t *testing.T) {

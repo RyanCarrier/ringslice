@@ -16,8 +16,8 @@ type RingSlice interface {
 	Append(interface{})
 	Put(int, interface{}) error
 	Get(int) (interface{}, error)
-	GetFirst() interface{}
-	GetLast() interface{}
+	GetFirst() (interface{}, error)
+	GetLast() (interface{}, error)
 	ToSlice() []interface{}
 }
 
@@ -69,19 +69,25 @@ func (g *genericRingSlice) Put(i int, val interface{}) error {
 	return nil
 }
 func (g *genericRingSlice) Get(i int) (interface{}, error) {
-	if i >= g.len || (g.head == g.tail) || (g.head == 0 && g.tail < g.len && i > g.tail) {
-		return nil, ErrReference
-	}
 	if i < 0 {
 		return nil, ErrNegative
 	}
+	if i >= g.len || g.data[g.absoluteIndex(i)] == nil {
+		return nil, ErrReference
+	}
 	return g.data[g.absoluteIndex(i)], nil
 }
-func (g *genericRingSlice) GetFirst() interface{} {
-	return g.data[g.head]
+func (g *genericRingSlice) GetFirst() (interface{}, error) {
+	if g.data[g.head] == nil {
+		return nil, ErrReference
+	}
+	return g.data[g.head], nil
 }
-func (g *genericRingSlice) GetLast() interface{} {
-	return g.data[g.tail]
+func (g *genericRingSlice) GetLast() (interface{}, error) {
+	if g.data[g.tail] == nil {
+		return nil, ErrReference
+	}
+	return g.data[g.tail], nil
 }
 func (g *genericRingSlice) ToSlice() []interface{} {
 	if g.tail < g.head {

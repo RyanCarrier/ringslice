@@ -170,13 +170,19 @@ func TestGetFirst(t *testing.T) {
 		tail: 4,
 		len:  10,
 	}
+	new, _ := New(10)
 	t.Run("Generic GetFirst", func(t *testing.T) {
-		if r.GetFirst() != 999 {
+		if f, _ := r.GetFirst(); f != 999 {
 			t.Error()
 		}
 	})
 	t.Run("GetFirst with loop", func(t *testing.T) {
-		if looped.GetFirst() != 1234 {
+		if f, _ := looped.GetFirst(); f != 1234 {
+			t.Error()
+		}
+	})
+	t.Run("GetFirst empty", func(t *testing.T) {
+		if _, err := new.GetFirst(); err != ErrReference {
 			t.Error()
 		}
 	})
@@ -195,13 +201,19 @@ func TestGetLast(t *testing.T) {
 		tail: 4,
 		len:  10,
 	}
+	new, _ := New(10)
 	t.Run("Generic GetLast", func(t *testing.T) {
-		if r.GetLast() != 1234 {
+		if f, _ := r.GetLast(); f != 1234 {
 			t.Error()
 		}
 	})
 	t.Run("GetLast with loop", func(t *testing.T) {
-		if looped.GetLast() != 999 {
+		if f, _ := looped.GetLast(); f != 999 {
+			t.Error()
+		}
+	})
+	t.Run("GetLast empty", func(t *testing.T) {
+		if _, err := new.GetLast(); err != ErrReference {
 			t.Error()
 		}
 	})

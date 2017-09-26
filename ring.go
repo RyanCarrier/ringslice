@@ -69,7 +69,7 @@ func (g *genericRingSlice) Put(i int, val interface{}) error {
 	return nil
 }
 func (g *genericRingSlice) Get(i int) (interface{}, error) {
-	if i >= g.len || (g.head <= g.tail && i > g.tail) {
+	if i >= g.len || (g.head == g.tail) || (g.head == 0 && g.tail < g.len && i > g.tail) {
 		return nil, ErrReference
 	}
 	if i < 0 {
